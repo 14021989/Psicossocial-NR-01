@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Questionário COPSOQ II - Versão Curta (41 Perguntas)</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen py-8">
+    <!-- Header -->
+    <header class="text-center mb-8">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-4xl font-bold text-gray-900 mb-2">
+                <i class="fas fa-clipboard-list text-blue-600 mr-3"></i>
+                COPSOQ II – Versão Curta
+            </h1>
+            <p class="text-gray-600 mb-2">(Kristensen, T., 2001)</p>
+            <p class="text-gray-600 mb-6">(Tradução e adaptação de Silva, C. et al., 2011)</p>
+        </div>
+    </header>
+
+    <!-- Progress Bar -->
+    <div class="max-w-4xl mx-auto mb-6">
+        <div class="bg-white rounded-lg shadow-sm p-4">
+            <div class="flex justify-between items-center mb-2">
+                <span class="text-sm font-medium text-gray-700">Progresso</span>
+                <span class="text-sm font-medium text-gray-700" id="progressText">0%</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="bg-blue-600 h-2 rounded-full transition-all duration-300" id="progressBar" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="max-w-4xl mx-auto bg-white shadow-xl rounded-lg overflow-hidden">
+        <!-- Instructions -->
+        <div class="bg-blue-50 border-l-4 border-blue-400 p-6">
+            <div class="flex items-start">
+                <i class="fas fa-info-circle text-blue-600 mt-1 mr-3"></i>
+                <div>
+                    <p class="text-blue-800 font-medium mb-2">Instruções:</p>
+                    <p class="text-blue-700">Das seguintes afirmações indique a que mais se adequa à sua resposta de acordo com as alternativas apresentadas. Todas as perguntas são obrigatórias.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Container -->
+        <div class="p-8">
+            <form id="copsoqForm" class="space-y-8">
+                <!-- Dados Demográficos -->
+                <div class="border-t-4 border-green-500 pt-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+                        <i class="fas fa-chart-bar text-green-600 mr-3"></i>
+                        Dados Demográficos
+                    </h2>
+                    <p class="text-sm text-gray-600 mb-6 bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
+                        <i class="fas fa-shield-alt text-blue-600 mr-2"></i>
+                        <strong>Pesquisa Anônima:</strong> Não coletamos dados pessoais identificáveis. Apenas informações demográficas para análise estatística.
+                    </p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="empresa" class="block text-sm font-medium text-gray-700 mb-2">Empresa *</label>
+                            <input type="text" id="empresa" name="empresa" required placeholder="Digite o nome da sua empresa"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label for="genero" class="block text-sm font-medium text-gray-700 mb-2">Gênero *</label>
+                            <select id="genero" name="genero" required 
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Selecione seu gênero</option>
+                                <option value="masculino">Masculino</option>
+                                <option value="feminino">Feminino</option>
+                                <option value="nao_binario">Não binário</option>
+                                <option value="prefiro_nao_informar">Prefiro não informar</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label for="idade" class="block text-sm font-medium text-gray-700 mb-2">Idade *</label>
+                            <select id="idade" name="idade" required 
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Selecione sua faixa etária</option>
+                                <option value="18-25">18 a 25 anos</option>
+                                <option value="26-35">26 a 35 anos</option>
+                                <option value="36-45">36 a 45 anos</option>
+                                <option value="46-55">46 a 55 anos</option>
+                                <option value="56-65">56 a 65 anos</option>
+                                <option value="acima_65">Acima de 65 anos</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label for="tempo_empresa" class="block text-sm font-medium text-gray-700 mb-2">Tempo na Empresa *</label>
+                            <select id="tempo_empresa" name="tempo_empresa" required 
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Selecione o tempo na empresa</option>
+                                <option value="menos_1_ano">Menos de 1 ano</option>
+                                <option value="1-2_anos">1 a 2 anos</option>
+                                <option value="3-5_anos">3 a 5 anos</option>
+                                <option value="6-10_anos">6 a 10 anos</option>
+                                <option value="11-15_anos">11 a 15 anos</option>
+                                <option value="16-20_anos">16 a 20 anos</option>
+                                <option value="mais_20_anos">Mais de 20 anos</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seção 1: Demandas Psicológicas e Exigências do Trabalho (Perguntas 1-6) -->
+                <div class="border-t-4 border-blue-500 pt-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-briefcase text-blue-600 mr-3"></i>
+                        Seção 1: Demandas Psicológicas e Exigências do Trabalho
+                    </h2>
+                    
+                    <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                        <p class="text-sm font-medium text-gray-700 mb-3">Escala de resposta:</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-5 gap-2 text-xs text-center">
+                            <span class="bg-red-100 p-2 rounded">1 - Nunca/quase nunca</span>
+                            <span class="bg-orange-100 p-2 rounded">2 - Raramente</span>
+                            <span class="bg-yellow-100 p-2 rounded">3 - Às vezes</span>
+                            <span class="bg-green-100 p-2 rounded">4 - Frequentemente</span>
+                            <span class="bg-blue-100 p-2 rounded">5 - Sempre</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-8">
+                        <!-- Pergunta 1 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">1. A sua carga de trabalho acumula-se por ser mal distribuída?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q1" value="1" id="q1_1" required>
+                                    <label for="q1_1" class="text-xs mt-2">Nunca/quase nunca</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q1" value="2" id="q1_2">
+                                    <label for="q1_2" class="text-xs mt-2">Raramente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q1" value="3" id="q1_3">
+                                    <label for="q1_3" class="text-xs mt-2">Às vezes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q1" value="4" id="q1_4">
+                                    <label for="q1_4" class="text-xs mt-2">Frequentemente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q1" value="5" id="q1_5">
+                                    <label for="q1_5" class="text-xs mt-2">Sempre</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pergunta 2 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">2. Com que frequência não tem tempo para completar todas as tarefas do seu trabalho?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q2" value="1" id="q2_1" required>
+                                    <label for="q2_1" class="text-xs mt-2">Nunca/quase nunca</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q2" value="2" id="q2_2">
+                                    <label for="q2_2" class="text-xs mt-2">Raramente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q2" value="3" id="q2_3">
+                                    <label for="q2_3" class="text-xs mt-2">Às vezes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q2" value="4" id="q2_4">
+                                    <label for="q2_4" class="text-xs mt-2">Frequentemente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q2" value="5" id="q2_5">
+                                    <label for="q2_5" class="text-xs mt-2">Sempre</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pergunta 3 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">3. Precisa trabalhar muito rapidamente?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q3" value="1" id="q3_1" required>
+                                    <label for="q3_1" class="text-xs mt-2">Nunca/quase nunca</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q3" value="2" id="q3_2">
+                                    <label for="q3_2" class="text-xs mt-2">Raramente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q3" value="3" id="q3_3">
+                                    <label for="q3_3" class="text-xs mt-2">Às vezes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q3" value="4" id="q3_4">
+                                    <label for="q3_4" class="text-xs mt-2">Frequentemente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q3" value="5" id="q3_5">
+                                    <label for="q3_5" class="text-xs mt-2">Sempre</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pergunta 4 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">4. O seu trabalho exige a sua atenção constante?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q4" value="1" id="q4_1" required>
+                                    <label for="q4_1" class="text-xs mt-2">Nunca/quase nunca</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q4" value="2" id="q4_2">
+                                    <label for="q4_2" class="text-xs mt-2">Raramente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q4" value="3" id="q4_3">
+                                    <label for="q4_3" class="text-xs mt-2">Às vezes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q4" value="4" id="q4_4">
+                                    <label for="q4_4" class="text-xs mt-2">Frequentemente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q4" value="5" id="q4_5">
+                                    <label for="q4_5" class="text-xs mt-2">Sempre</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pergunta 5 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">5. O seu trabalho exige que tome decisões difíceis?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q5" value="1" id="q5_1" required>
+                                    <label for="q5_1" class="text-xs mt-2">Nunca/quase nunca</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q5" value="2" id="q5_2">
+                                    <label for="q5_2" class="text-xs mt-2">Raramente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q5" value="3" id="q5_3">
+                                    <label for="q5_3" class="text-xs mt-2">Às vezes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q5" value="4" id="q5_4">
+                                    <label for="q5_4" class="text-xs mt-2">Frequentemente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q5" value="5" id="q5_5">
+                                    <label for="q5_5" class="text-xs mt-2">Sempre</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pergunta 6 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">6. O seu trabalho exige emocionalmente de si?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q6" value="1" id="q6_1" required>
+                                    <label for="q6_1" class="text-xs mt-2">Nunca/quase nunca</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q6" value="2" id="q6_2">
+                                    <label for="q6_2" class="text-xs mt-2">Raramente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q6" value="3" id="q6_3">
+                                    <label for="q6_3" class="text-xs mt-2">Às vezes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q6" value="4" id="q6_4">
+                                    <label for="q6_4" class="text-xs mt-2">Frequentemente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q6" value="5" id="q6_5">
+                                    <label for="q6_5" class="text-xs mt-2">Sempre</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seção 2: Influência e Desenvolvimento (Perguntas 7-9) -->
+                <div class="border-t-4 border-purple-500 pt-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-chart-line text-purple-600 mr-3"></i>
+                        Seção 2: Influência e Desenvolvimento
+                    </h2>
+                    
+                    <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                        <p class="text-sm font-medium text-gray-700 mb-3">Escala de resposta:</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-5 gap-2 text-xs text-center">
+                            <span class="bg-red-100 p-2 rounded">1 - Nunca/quase nunca</span>
+                            <span class="bg-orange-100 p-2 rounded">2 - Raramente</span>
+                            <span class="bg-yellow-100 p-2 rounded">3 - Às vezes</span>
+                            <span class="bg-green-100 p-2 rounded">4 - Frequentemente</span>
+                            <span class="bg-blue-100 p-2 rounded">5 - Sempre</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-8">
+                        <!-- Pergunta 7 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">7. Tem um elevado grau de influência no seu trabalho?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q7" value="1" id="q7_1" required>
+                                    <label for="q7_1" class="text-xs mt-2">Nunca/quase nunca</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q7" value="2" id="q7_2">
+                                    <label for="q7_2" class="text-xs mt-2">Raramente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q7" value="3" id="q7_3">
+                                    <label for="q7_3" class="text-xs mt-2">Às vezes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q7" value="4" id="q7_4">
+                                    <label for="q7_4" class="text-xs mt-2">Frequentemente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q7" value="5" id="q7_5">
+                                    <label for="q7_5" class="text-xs mt-2">Sempre</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pergunta 8 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">8. O seu trabalho exige que tenha iniciativa?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q8" value="1" id="q8_1" required>
+                                    <label for="q8_1" class="text-xs mt-2">Nunca/quase nunca</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q8" value="2" id="q8_2">
+                                    <label for="q8_2" class="text-xs mt-2">Raramente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q8" value="3" id="q8_3">
+                                    <label for="q8_3" class="text-xs mt-2">Às vezes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q8" value="4" id="q8_4">
+                                    <label for="q8_4" class="text-xs mt-2">Frequentemente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q8" value="5" id="q8_5">
+                                    <label for="q8_5" class="text-xs mt-2">Sempre</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pergunta 9 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">9. O seu trabalho permite-lhe aprender coisas novas?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q9" value="1" id="q9_1" required>
+                                    <label for="q9_1" class="text-xs mt-2">Nunca/quase nunca</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q9" value="2" id="q9_2">
+                                    <label for="q9_2" class="text-xs mt-2">Raramente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q9" value="3" id="q9_3">
+                                    <label for="q9_3" class="text-xs mt-2">Às vezes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q9" value="4" id="q9_4">
+                                    <label for="q9_4" class="text-xs mt-2">Frequentemente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q9" value="5" id="q9_5">
+                                    <label for="q9_5" class="text-xs mt-2">Sempre</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seção 3: Apoio Social e Liderança (Perguntas 10-23) -->
+                <div class="border-t-4 border-green-500 pt-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-users text-green-600 mr-3"></i>
+                        Seção 3: Apoio Social e Liderança
+                    </h2>
+                    
+                    <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                        <p class="text-sm font-medium text-gray-700 mb-3">Escala de resposta:</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-5 gap-2 text-xs text-center">
+                            <span class="bg-red-100 p-2 rounded">1 - Nunca/quase nunca</span>
+                            <span class="bg-orange-100 p-2 rounded">2 - Raramente</span>
+                            <span class="bg-yellow-100 p-2 rounded">3 - Às vezes</span>
+                            <span class="bg-green-100 p-2 rounded">4 - Frequentemente</span>
+                            <span class="bg-blue-100 p-2 rounded">5 - Sempre</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-8">
+                        <!-- Pergunta 10 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">10. No seu local de trabalho, é informado com antecedência sobre decisões importantes, mudanças ou planos para o futuro?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q10" value="1" id="q10_1" required>
+                                    <label for="q10_1" class="text-xs mt-2">Nunca/quase nunca</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q10" value="2" id="q10_2">
+                                    <label for="q10_2" class="text-xs mt-2">Raramente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q10" value="3" id="q10_3">
+                                    <label for="q10_3" class="text-xs mt-2">Às vezes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q10" value="4" id="q10_4">
+                                    <label for="q10_4" class="text-xs mt-2">Frequentemente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q10" value="5" id="q10_5">
+                                    <label for="q10_5" class="text-xs mt-2">Sempre</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pergunta 11 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">11. Recebe toda a informação de que necessita para fazer bem o seu trabalho?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q11" value="1" id="q11_1" required>
+                                    <label for="q11_1" class="text-xs mt-2">Nunca/quase nunca</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q11" value="2" id="q11_2">
+                                    <label for="q11_2" class="text-xs mt-2">Raramente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q11" value="3" id="q11_3">
+                                    <label for="q11_3" class="text-xs mt-2">Às vezes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q11" value="4" id="q11_4">
+                                    <label for="q11_4" class="text-xs mt-2">Frequentemente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q11" value="5" id="q11_5">
+                                    <label for="q11_5" class="text-xs mt-2">Sempre</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pergunta 12 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">12. Sabe exactamente quais as suas responsabilidades?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q12" value="1" id="q12_1" required>
+                                    <label for="q12_1" class="text-xs mt-2">Nunca/quase nunca</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q12" value="2" id="q12_2">
+                                    <label for="q12_2" class="text-xs mt-2">Raramente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q12" value="3" id="q12_3">
+                                    <label for="q12_3" class="text-xs mt-2">Às vezes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q12" value="4" id="q12_4">
+                                    <label for="q12_4" class="text-xs mt-2">Frequentemente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q12" value="5" id="q12_5">
+                                    <label for="q12_5" class="text-xs mt-2">Sempre</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pergunta 13 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">13. O seu trabalho é reconhecido e apreciado pela gerência?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q13" value="1" id="q13_1" required>
+                                    <label for="q13_1" class="text-xs mt-2">Nunca/quase nunca</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q13" value="2" id="q13_2">
+                                    <label for="q13_2" class="text-xs mt-2">Raramente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q13" value="3" id="q13_3">
+                                    <label for="q13_3" class="text-xs mt-2">Às vezes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q13" value="4" id="q13_4">
+                                    <label for="q13_4" class="text-xs mt-2">Frequentemente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q13" value="5" id="q13_5">
+                                    <label for="q13_5" class="text-xs mt-2">Sempre</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pergunta 14 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">14. É tratado de forma justa no seu local de trabalho?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q14" value="1" id="q14_1" required>
+                                    <label for="q14_1" class="text-xs mt-2">Nunca/quase nunca</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q14" value="2" id="q14_2">
+                                    <label for="q14_2" class="text-xs mt-2">Raramente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q14" value="3" id="q14_3">
+                                    <label for="q14_3" class="text-xs mt-2">Às vezes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q14" value="4" id="q14_4">
+                                    <label for="q14_4" class="text-xs mt-2">Frequentemente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q14" value="5" id="q14_5">
+                                    <label for="q14_5" class="text-xs mt-2">Sempre</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pergunta 15 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">15. Com que frequência tem ajuda e apoio do seu superior imediato?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q15" value="1" id="q15_1" required>
+                                    <label for="q15_1" class="text-xs mt-2">Nunca/quase nunca</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q15" value="2" id="q15_2">
+                                    <label for="q15_2" class="text-xs mt-2">Raramente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q15" value="3" id="q15_3">
+                                    <label for="q15_3" class="text-xs mt-2">Às vezes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q15" value="4" id="q15_4">
+                                    <label for="q15_4" class="text-xs mt-2">Frequentemente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q15" value="5" id="q15_5">
+                                    <label for="q15_5" class="text-xs mt-2">Sempre</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pergunta 16 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">16. Existe um bom ambiente de trabalho entre si e os seus colegas?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q16" value="1" id="q16_1" required>
+                                    <label for="q16_1" class="text-xs mt-2">Nunca/quase nunca</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q16" value="2" id="q16_2">
+                                    <label for="q16_2" class="text-xs mt-2">Raramente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q16" value="3" id="q16_3">
+                                    <label for="q16_3" class="text-xs mt-2">Às vezes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q16" value="4" id="q16_4">
+                                    <label for="q16_4" class="text-xs mt-2">Frequentemente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q16" value="5" id="q16_5">
+                                    <label for="q16_5" class="text-xs mt-2">Sempre</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pergunta 17 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">17. Oferece aos indivíduos e ao grupo boas oportunidades de desenvolvimento?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q17" value="1" id="q17_1" required>
+                                    <label for="q17_1" class="text-xs mt-2">Nunca/quase nunca</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q17" value="2" id="q17_2">
+                                    <label for="q17_2" class="text-xs mt-2">Raramente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q17" value="3" id="q17_3">
+                                    <label for="q17_3" class="text-xs mt-2">Às vezes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q17" value="4" id="q17_4">
+                                    <label for="q17_4" class="text-xs mt-2">Frequentemente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q17" value="5" id="q17_5">
+                                    <label for="q17_5" class="text-xs mt-2">Sempre</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pergunta 18 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">18. É bom no planeamento do trabalho?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q18" value="1" id="q18_1" required>
+                                    <label for="q18_1" class="text-xs mt-2">Nunca/quase nunca</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q18" value="2" id="q18_2">
+                                    <label for="q18_2" class="text-xs mt-2">Raramente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q18" value="3" id="q18_3">
+                                    <label for="q18_3" class="text-xs mt-2">Às vezes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q18" value="4" id="q18_4">
+                                    <label for="q18_4" class="text-xs mt-2">Frequentemente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q18" value="5" id="q18_5">
+                                    <label for="q18_5" class="text-xs mt-2">Sempre</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pergunta 19 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">19. A gerência confia nos seus funcionários para fazerem o seu trabalho bem?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q19" value="1" id="q19_1" required>
+                                    <label for="q19_1" class="text-xs mt-2">Nunca/quase nunca</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q19" value="2" id="q19_2">
+                                    <label for="q19_2" class="text-xs mt-2">Raramente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q19" value="3" id="q19_3">
+                                    <label for="q19_3" class="text-xs mt-2">Às vezes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q19" value="4" id="q19_4">
+                                    <label for="q19_4" class="text-xs mt-2">Frequentemente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q19" value="5" id="q19_5">
+                                    <label for="q19_5" class="text-xs mt-2">Sempre</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pergunta 20 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">20. Confia na informação que lhe é transmitida pela gerência?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q20" value="1" id="q20_1" required>
+                                    <label for="q20_1" class="text-xs mt-2">Nunca/quase nunca</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q20" value="2" id="q20_2">
+                                    <label for="q20_2" class="text-xs mt-2">Raramente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q20" value="3" id="q20_3">
+                                    <label for="q20_3" class="text-xs mt-2">Às vezes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q20" value="4" id="q20_4">
+                                    <label for="q20_4" class="text-xs mt-2">Frequentemente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q20" value="5" id="q20_5">
+                                    <label for="q20_5" class="text-xs mt-2">Sempre</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pergunta 21 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">21. Os conflitos são resolvidos de uma forma justa?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q21" value="1" id="q21_1" required>
+                                    <label for="q21_1" class="text-xs mt-2">Nunca/quase nunca</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q21" value="2" id="q21_2">
+                                    <label for="q21_2" class="text-xs mt-2">Raramente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q21" value="3" id="q21_3">
+                                    <label for="q21_3" class="text-xs mt-2">Às vezes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q21" value="4" id="q21_4">
+                                    <label for="q21_4" class="text-xs mt-2">Frequentemente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q21" value="5" id="q21_5">
+                                    <label for="q21_5" class="text-xs mt-2">Sempre</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pergunta 22 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">22. O trabalho é igualmente distribuído pelos funcionários?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q22" value="1" id="q22_1" required>
+                                    <label for="q22_1" class="text-xs mt-2">Nunca/quase nunca</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q22" value="2" id="q22_2">
+                                    <label for="q22_2" class="text-xs mt-2">Raramente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q22" value="3" id="q22_3">
+                                    <label for="q22_3" class="text-xs mt-2">Às vezes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q22" value="4" id="q22_4">
+                                    <label for="q22_4" class="text-xs mt-2">Frequentemente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q22" value="5" id="q22_5">
+                                    <label for="q22_5" class="text-xs mt-2">Sempre</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pergunta 23 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">23. Sou sempre capaz de resolver problemas, se tentar o suficiente.</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q23" value="1" id="q23_1" required>
+                                    <label for="q23_1" class="text-xs mt-2">Nunca/quase nunca</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q23" value="2" id="q23_2">
+                                    <label for="q23_2" class="text-xs mt-2">Raramente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q23" value="3" id="q23_3">
+                                    <label for="q23_3" class="text-xs mt-2">Às vezes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q23" value="4" id="q23_4">
+                                    <label for="q23_4" class="text-xs mt-2">Frequentemente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q23" value="5" id="q23_5">
+                                    <label for="q23_5" class="text-xs mt-2">Sempre</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seção 4: Significado do Trabalho e Satisfação (Perguntas 24-28) -->
+                <div class="border-t-4 border-yellow-500 pt-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-heart text-yellow-600 mr-3"></i>
+                        Seção 4: Significado do Trabalho e Satisfação
+                    </h2>
+                    
+                    <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                        <p class="text-sm font-medium text-gray-700 mb-3">Escala de resposta:</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-5 gap-2 text-xs text-center">
+                            <span class="bg-red-100 p-2 rounded">1 - Nada/quase nada</span>
+                            <span class="bg-orange-100 p-2 rounded">2 - Um pouco</span>
+                            <span class="bg-yellow-100 p-2 rounded">3 - Moderadamente</span>
+                            <span class="bg-green-100 p-2 rounded">4 - Muito</span>
+                            <span class="bg-blue-100 p-2 rounded">5 - Extremamente</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-8">
+                        <!-- Pergunta 24 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">24. O seu trabalho tem algum significado para si?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q24" value="1" id="q24_1" required>
+                                    <label for="q24_1" class="text-xs mt-2">Nada/quase nada</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q24" value="2" id="q24_2">
+                                    <label for="q24_2" class="text-xs mt-2">Um pouco</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q24" value="3" id="q24_3">
+                                    <label for="q24_3" class="text-xs mt-2">Moderadamente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q24" value="4" id="q24_4">
+                                    <label for="q24_4" class="text-xs mt-2">Muito</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q24" value="5" id="q24_5">
+                                    <label for="q24_5" class="text-xs mt-2">Extremamente</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pergunta 25 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">25. Sente que o seu trabalho é importante?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q25" value="1" id="q25_1" required>
+                                    <label for="q25_1" class="text-xs mt-2">Nada/quase nada</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q25" value="2" id="q25_2">
+                                    <label for="q25_2" class="text-xs mt-2">Um pouco</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q25" value="3" id="q25_3">
+                                    <label for="q25_3" class="text-xs mt-2">Moderadamente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q25" value="4" id="q25_4">
+                                    <label for="q25_4" class="text-xs mt-2">Muito</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q25" value="5" id="q25_5">
+                                    <label for="q25_5" class="text-xs mt-2">Extremamente</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pergunta 26 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">26. Sente que os problemas do seu local de trabalho são seus também?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q26" value="1" id="q26_1" required>
+                                    <label for="q26_1" class="text-xs mt-2">Nada/quase nada</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q26" value="2" id="q26_2">
+                                    <label for="q26_2" class="text-xs mt-2">Um pouco</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q26" value="3" id="q26_3">
+                                    <label for="q26_3" class="text-xs mt-2">Moderadamente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q26" value="4" id="q26_4">
+                                    <label for="q26_4" class="text-xs mt-2">Muito</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q26" value="5" id="q26_5">
+                                    <label for="q26_5" class="text-xs mt-2">Extremamente</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pergunta 27 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">27. Quão satisfeito está com o seu trabalho de uma forma global?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q27" value="1" id="q27_1" required>
+                                    <label for="q27_1" class="text-xs mt-2">Nada/quase nada</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q27" value="2" id="q27_2">
+                                    <label for="q27_2" class="text-xs mt-2">Um pouco</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q27" value="3" id="q27_3">
+                                    <label for="q27_3" class="text-xs mt-2">Moderadamente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q27" value="4" id="q27_4">
+                                    <label for="q27_4" class="text-xs mt-2">Muito</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q27" value="5" id="q27_5">
+                                    <label for="q27_5" class="text-xs mt-2">Extremamente</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pergunta 28 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">28. Sente-se preocupado em ficar desempregado?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q28" value="1" id="q28_1" required>
+                                    <label for="q28_1" class="text-xs mt-2">Nada/quase nada</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q28" value="2" id="q28_2">
+                                    <label for="q28_2" class="text-xs mt-2">Um pouco</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q28" value="3" id="q28_3">
+                                    <label for="q28_3" class="text-xs mt-2">Moderadamente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q28" value="4" id="q28_4">
+                                    <label for="q28_4" class="text-xs mt-2">Muito</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q28" value="5" id="q28_5">
+                                    <label for="q28_5" class="text-xs mt-2">Extremamente</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seção 5: Saúde Geral (Pergunta 29) -->
+                <div class="border-t-4 border-red-500 pt-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-heartbeat text-red-600 mr-3"></i>
+                        Seção 5: Saúde Geral
+                    </h2>
+                    
+                    <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                        <p class="text-sm font-medium text-gray-700 mb-3">Escala de resposta:</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-5 gap-2 text-xs text-center">
+                            <span class="bg-green-100 p-2 rounded">1 - Excelente</span>
+                            <span class="bg-blue-100 p-2 rounded">2 - Muito Boa</span>
+                            <span class="bg-yellow-100 p-2 rounded">3 - Boa</span>
+                            <span class="bg-orange-100 p-2 rounded">4 - Razoável</span>
+                            <span class="bg-red-100 p-2 rounded">5 - Deficitária</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-8">
+                        <!-- Pergunta 29 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">29. Em geral, sente que a sua saúde é:</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q29" value="1" id="q29_1" required>
+                                    <label for="q29_1" class="text-xs mt-2">Excelente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q29" value="2" id="q29_2">
+                                    <label for="q29_2" class="text-xs mt-2">Muito Boa</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q29" value="3" id="q29_3">
+                                    <label for="q29_3" class="text-xs mt-2">Boa</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q29" value="4" id="q29_4">
+                                    <label for="q29_4" class="text-xs mt-2">Razoável</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q29" value="5" id="q29_5">
+                                    <label for="q29_5" class="text-xs mt-2">Deficitária</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seção 6: Interface Trabalho-Vida Privada (Perguntas 30-31) -->
+                <div class="border-t-4 border-indigo-500 pt-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-balance-scale text-indigo-600 mr-3"></i>
+                        Seção 6: Interface Trabalho-Vida Privada
+                    </h2>
+                    
+                    <div class="bg-indigo-50 p-4 rounded-lg mb-6">
+                        <p class="text-sm font-medium text-indigo-800 mb-2">As próximas questões referem-se ao modo como o seu trabalho afecta a sua vida privada:</p>
+                        <p class="text-sm font-medium text-gray-700 mb-3">Escala de resposta:</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-5 gap-2 text-xs text-center">
+                            <span class="bg-red-100 p-2 rounded">1 - Nada/quase nada</span>
+                            <span class="bg-orange-100 p-2 rounded">2 - Um pouco</span>
+                            <span class="bg-yellow-100 p-2 rounded">3 - Moderadamente</span>
+                            <span class="bg-green-100 p-2 rounded">4 - Muito</span>
+                            <span class="bg-blue-100 p-2 rounded">5 - Extremamente</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-8">
+                        <!-- Pergunta 30 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">30. Sente que o seu trabalho lhe exige muita energia que acaba por afectar a sua vida privada negativamente?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q30" value="1" id="q30_1" required>
+                                    <label for="q30_1" class="text-xs mt-2">Nada/quase nada</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q30" value="2" id="q30_2">
+                                    <label for="q30_2" class="text-xs mt-2">Um pouco</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q30" value="3" id="q30_3">
+                                    <label for="q30_3" class="text-xs mt-2">Moderadamente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q30" value="4" id="q30_4">
+                                    <label for="q30_4" class="text-xs mt-2">Muito</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q30" value="5" id="q30_5">
+                                    <label for="q30_5" class="text-xs mt-2">Extremamente</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pergunta 31 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">31. Sente que o seu trabalho lhe exige muito tempo que acaba por afectar a sua vida privada negativamente?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q31" value="1" id="q31_1" required>
+                                    <label for="q31_1" class="text-xs mt-2">Nada/quase nada</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q31" value="2" id="q31_2">
+                                    <label for="q31_2" class="text-xs mt-2">Um pouco</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q31" value="3" id="q31_3">
+                                    <label for="q31_3" class="text-xs mt-2">Moderadamente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q31" value="4" id="q31_4">
+                                    <label for="q31_4" class="text-xs mt-2">Muito</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q31" value="5" id="q31_5">
+                                    <label for="q31_5" class="text-xs mt-2">Extremamente</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seção 7: Sintomas de Burnout e Bem-estar (Perguntas 32-37) -->
+                <div class="border-t-4 border-orange-500 pt-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-tired text-orange-600 mr-3"></i>
+                        Seção 7: Sintomas de Burnout e Bem-estar
+                    </h2>
+                    
+                    <div class="bg-orange-50 p-4 rounded-lg mb-6">
+                        <p class="text-sm font-medium text-orange-800 mb-2">Com que frequência durante as últimas 4 semanas sentiu...</p>
+                        <p class="text-sm font-medium text-gray-700 mb-3">Escala de resposta:</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-5 gap-2 text-xs text-center">
+                            <span class="bg-red-100 p-2 rounded">1 - Nunca/quase nunca</span>
+                            <span class="bg-orange-100 p-2 rounded">2 - Raramente</span>
+                            <span class="bg-yellow-100 p-2 rounded">3 - Às vezes</span>
+                            <span class="bg-green-100 p-2 rounded">4 - Frequentemente</span>
+                            <span class="bg-blue-100 p-2 rounded">5 - Sempre</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-8">
+                        <!-- Pergunta 32 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">32. Acordou várias vezes durante a noite e depois não conseguia adormecer novamente?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q32" value="1" id="q32_1" required>
+                                    <label for="q32_1" class="text-xs mt-2">Nunca/quase nunca</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q32" value="2" id="q32_2">
+                                    <label for="q32_2" class="text-xs mt-2">Raramente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q32" value="3" id="q32_3">
+                                    <label for="q32_3" class="text-xs mt-2">Às vezes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q32" value="4" id="q32_4">
+                                    <label for="q32_4" class="text-xs mt-2">Frequentemente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q32" value="5" id="q32_5">
+                                    <label for="q32_5" class="text-xs mt-2">Sempre</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pergunta 33 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">33. Fisicamente exausto?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q33" value="1" id="q33_1" required>
+                                    <label for="q33_1" class="text-xs mt-2">Nunca/quase nunca</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q33" value="2" id="q33_2">
+                                    <label for="q33_2" class="text-xs mt-2">Raramente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q33" value="3" id="q33_3">
+                                    <label for="q33_3" class="text-xs mt-2">Às vezes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q33" value="4" id="q33_4">
+                                    <label for="q33_4" class="text-xs mt-2">Frequentemente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q33" value="5" id="q33_5">
+                                    <label for="q33_5" class="text-xs mt-2">Sempre</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pergunta 34 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">34. Emocionalmente exausto?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q34" value="1" id="q34_1" required>
+                                    <label for="q34_1" class="text-xs mt-2">Nunca/quase nunca</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q34" value="2" id="q34_2">
+                                    <label for="q34_2" class="text-xs mt-2">Raramente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q34" value="3" id="q34_3">
+                                    <label for="q34_3" class="text-xs mt-2">Às vezes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q34" value="4" id="q34_4">
+                                    <label for="q34_4" class="text-xs mt-2">Frequentemente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q34" value="5" id="q34_5">
+                                    <label for="q34_5" class="text-xs mt-2">Sempre</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pergunta 35 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">35. Irritado?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q35" value="1" id="q35_1" required>
+                                    <label for="q35_1" class="text-xs mt-2">Nunca/quase nunca</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q35" value="2" id="q35_2">
+                                    <label for="q35_2" class="text-xs mt-2">Raramente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q35" value="3" id="q35_3">
+                                    <label for="q35_3" class="text-xs mt-2">Às vezes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q35" value="4" id="q35_4">
+                                    <label for="q35_4" class="text-xs mt-2">Frequentemente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q35" value="5" id="q35_5">
+                                    <label for="q35_5" class="text-xs mt-2">Sempre</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pergunta 36 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">36. Ansioso?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q36" value="1" id="q36_1" required>
+                                    <label for="q36_1" class="text-xs mt-2">Nunca/quase nunca</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q36" value="2" id="q36_2">
+                                    <label for="q36_2" class="text-xs mt-2">Raramente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q36" value="3" id="q36_3">
+                                    <label for="q36_3" class="text-xs mt-2">Às vezes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q36" value="4" id="q36_4">
+                                    <label for="q36_4" class="text-xs mt-2">Frequentemente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q36" value="5" id="q36_5">
+                                    <label for="q36_5" class="text-xs mt-2">Sempre</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pergunta 37 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">37. Triste?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q37" value="1" id="q37_1" required>
+                                    <label for="q37_1" class="text-xs mt-2">Nunca/quase nunca</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q37" value="2" id="q37_2">
+                                    <label for="q37_2" class="text-xs mt-2">Raramente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q37" value="3" id="q37_3">
+                                    <label for="q37_3" class="text-xs mt-2">Às vezes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q37" value="4" id="q37_4">
+                                    <label for="q37_4" class="text-xs mt-2">Frequentemente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q37" value="5" id="q37_5">
+                                    <label for="q37_5" class="text-xs mt-2">Sempre</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seção 8: Comportamentos Ofensivos (Perguntas 38-41) -->
+                <div class="border-t-4 border-red-600 pt-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-exclamation-triangle text-red-600 mr-3"></i>
+                        Seção 8: Comportamentos Ofensivos
+                    </h2>
+                    
+                    <div class="bg-red-50 p-4 rounded-lg mb-6">
+                        <p class="text-sm font-medium text-red-800 mb-2">Nos últimos 12 meses, no seu local de trabalho:</p>
+                        <p class="text-sm font-medium text-gray-700 mb-3">Escala de resposta:</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-5 gap-2 text-xs text-center">
+                            <span class="bg-red-100 p-2 rounded">1 - Nunca/quase nunca</span>
+                            <span class="bg-orange-100 p-2 rounded">2 - Raramente</span>
+                            <span class="bg-yellow-100 p-2 rounded">3 - Às vezes</span>
+                            <span class="bg-green-100 p-2 rounded">4 - Frequentemente</span>
+                            <span class="bg-blue-100 p-2 rounded">5 - Sempre</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-8">
+                        <!-- Pergunta 38 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">38. Tem sido alvo de insultos ou provocações verbais?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q38" value="1" id="q38_1" required>
+                                    <label for="q38_1" class="text-xs mt-2">Nunca/quase nunca</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q38" value="2" id="q38_2">
+                                    <label for="q38_2" class="text-xs mt-2">Raramente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q38" value="3" id="q38_3">
+                                    <label for="q38_3" class="text-xs mt-2">Às vezes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q38" value="4" id="q38_4">
+                                    <label for="q38_4" class="text-xs mt-2">Frequentemente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q38" value="5" id="q38_5">
+                                    <label for="q38_5" class="text-xs mt-2">Sempre</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pergunta 39 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">39. Tem sido exposto a assédio sexual indesejado?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q39" value="1" id="q39_1" required>
+                                    <label for="q39_1" class="text-xs mt-2">Nunca/quase nunca</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q39" value="2" id="q39_2">
+                                    <label for="q39_2" class="text-xs mt-2">Raramente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q39" value="3" id="q39_3">
+                                    <label for="q39_3" class="text-xs mt-2">Às vezes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q39" value="4" id="q39_4">
+                                    <label for="q39_4" class="text-xs mt-2">Frequentemente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q39" value="5" id="q39_5">
+                                    <label for="q39_5" class="text-xs mt-2">Sempre</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pergunta 40 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">40. Tem sido exposto a ameaças de violência?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q40" value="1" id="q40_1" required>
+                                    <label for="q40_1" class="text-xs mt-2">Nunca/quase nunca</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q40" value="2" id="q40_2">
+                                    <label for="q40_2" class="text-xs mt-2">Raramente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q40" value="3" id="q40_3">
+                                    <label for="q40_3" class="text-xs mt-2">Às vezes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q40" value="4" id="q40_4">
+                                    <label for="q40_4" class="text-xs mt-2">Frequentemente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q40" value="5" id="q40_5">
+                                    <label for="q40_5" class="text-xs mt-2">Sempre</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pergunta 41 -->
+                        <div class="question-item bg-gray-50 p-6 rounded-lg">
+                            <label class="block text-gray-900 font-medium mb-4">41. Tem sido exposto a violência física?</label>
+                            <div class="radio-group">
+                                <div class="radio-item">
+                                    <input type="radio" name="q41" value="1" id="q41_1" required>
+                                    <label for="q41_1" class="text-xs mt-2">Nunca/quase nunca</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q41" value="2" id="q41_2">
+                                    <label for="q41_2" class="text-xs mt-2">Raramente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q41" value="3" id="q41_3">
+                                    <label for="q41_3" class="text-xs mt-2">Às vezes</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q41" value="4" id="q41_4">
+                                    <label for="q41_4" class="text-xs mt-2">Frequentemente</label>
+                                </div>
+                                <div class="radio-item">
+                                    <input type="radio" name="q41" value="5" id="q41_5">
+                                    <label for="q41_5" class="text-xs mt-2">Sempre</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="border-t pt-6">
+                    <div class="flex justify-center">
+                        <button type="submit" id="submitBtn" 
+                                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300">
+                            <i class="fas fa-paper-plane mr-2"></i>
+                            Enviar Questionário
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-8 max-w-md mx-4">
+            <div class="text-center">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-check text-green-600 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">Questionário Enviado!</h3>
+                <p class="text-gray-600 mb-6">Obrigado pela sua participação. Suas respostas foram registradas com sucesso.</p>
+                <button onclick="closeModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors">
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div id="errorModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-8 max-w-md mx-4">
+            <div class="text-center">
+                <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-exclamation-triangle text-red-600 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">Erro no Envio</h3>
+                <p class="text-gray-600 mb-6" id="errorMessage">Ocorreu um erro ao enviar o questionário. Tente novamente.</p>
+                <button onclick="closeErrorModal()" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg transition-colors">
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Link -->
+    <div class="fixed bottom-4 right-4">
+        <a href="admin/login.html" class="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-lg text-sm transition-colors">
+            <i class="fas fa-cog mr-2"></i>
+            Área Administrativa
+        </a>
+    </div>
+
+    <script src="js/questionario.js"></script>
+</body>
+</html>
+

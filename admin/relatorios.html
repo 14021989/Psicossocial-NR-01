@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatórios - COPSOQ System</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .sidebar {
+            transition: transform 0.3s ease;
+        }
+        
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+        
+        @media (min-width: 768px) {
+            .sidebar.collapsed {
+                transform: translateX(0);
+                width: 4rem;
+            }
+            
+            .sidebar.collapsed .sidebar-text {
+                display: none;
+            }
+            
+            .sidebar.collapsed .sidebar-icon {
+                margin: 0 auto;
+            }
+        }
+        
+        .filter-card {
+            transition: all 0.3s ease;
+        }
+        
+        .filter-card.expanded {
+            max-height: 1000px;
+        }
+        
+        .filter-card.collapsed {
+            max-height: 60px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar fixed left-0 top-0 h-full w-64 bg-white shadow-lg z-30">
+        <div class="p-6 border-b">
+            <div class="flex items-center">
+                <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-chart-bar text-white"></i>
+                </div>
+                <div class="ml-3 sidebar-text">
+                    <h1 class="text-lg font-bold text-gray-800">COPSOQ Admin</h1>
+                    <p class="text-sm text-gray-600">Sistema de Relatórios</p>
+                </div>
+            </div>
+        </div>
+        
+        <nav class="mt-6">
+            <a href="dashboard.html" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-colors">
+                <i class="fas fa-tachometer-alt sidebar-icon"></i>
+                <span class="ml-3 sidebar-text">Dashboard</span>
+            </a>
+            <a href="#" class="flex items-center px-6 py-3 text-blue-600 bg-blue-50 border-r-2 border-blue-600">
+                <i class="fas fa-chart-line sidebar-icon"></i>
+                <span class="ml-3 sidebar-text">Relatórios</span>
+            </a>
+            <a href="empresas.html" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-colors">
+                <i class="fas fa-building sidebar-icon"></i>
+                <span class="ml-3 sidebar-text">Empresas</span>
+            </a>
+            <a href="#" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-colors">
+                <i class="fas fa-users sidebar-icon"></i>
+                <span class="ml-3 sidebar-text">Usuários</span>
+            </a>
+            <a href="#" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-colors">
+                <i class="fas fa-cog sidebar-icon"></i>
+                <span class="ml-3 sidebar-text">Configurações</span>
+            </a>
+        </nav>
+        
+        <div class="absolute bottom-0 w-full p-6 border-t">
+            <div class="flex items-center">
+                <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+                    <i class="fas fa-user text-gray-600 text-sm"></i>
+                </div>
+                <div class="ml-3 sidebar-text">
+                    <p class="text-sm font-medium text-gray-800" id="adminName">Administrador</p>
+                    <button onclick="logout()" class="text-xs text-red-600 hover:text-red-800">Sair</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="mainContent" class="ml-64 transition-all duration-300">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b">
+            <div class="flex items-center justify-between px-6 py-4">
+                <div class="flex items-center">
+                    <button id="sidebarToggle" class="text-gray-600 hover:text-gray-800 mr-4">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h2 class="text-xl font-semibold text-gray-800">Relatórios</h2>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <button id="exportBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
+                        <i class="fas fa-download mr-2"></i>
+                        Exportar
+                    </button>
+                    
+                    <button id="refreshBtn" class="text-gray-600 hover:text-gray-800">
+                        <i class="fas fa-sync-alt text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Filters -->
+        <div class="p-6">
+            <div class="filter-card bg-white rounded-lg shadow-sm mb-6 expanded">
+                <div class="flex items-center justify-between p-4 border-b cursor-pointer" onclick="toggleFilters()">
+                    <h3 class="text-lg font-semibold text-gray-800">
+                        <i class="fas fa-filter mr-2"></i>
+                        Filtros
+                    </h3>
+                    <i id="filterToggleIcon" class="fas fa-chevron-up text-gray-600"></i>
+                </div>
+                
+                <div id="filterContent" class="p-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Empresa</label>
+                            <select id="empresaFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="">Todas as empresas</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Data Inicial</label>
+                            <input type="date" id="dataInicialFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Data Final</label>
+                            <input type="date" id="dataFinalFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Departamento</label>
+                            <input type="text" id="departamentoFilter" placeholder="Filtrar por departamento" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between">
+                        <button id="clearFiltersBtn" class="text-gray-600 hover:text-gray-800">
+                            <i class="fas fa-times mr-2"></i>
+                            Limpar Filtros
+                        </button>
+                        
+                        <button id="applyFiltersBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
+                            <i class="fas fa-search mr-2"></i>
+                            Aplicar Filtros
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600">Total de Respostas</p>
+                            <p class="text-2xl font-bold text-gray-900" id="totalRespostasFiltradas">0</p>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-clipboard-list text-blue-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600">Média Geral</p>
+                            <p class="text-2xl font-bold text-gray-900" id="mediaGeralFiltrada">0.0</p>
+                        </div>
+                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-chart-line text-green-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600">Empresas</p>
+                            <p class="text-2xl font-bold text-gray-900" id="empresasFiltradas">0</p>
+                        </div>
+                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-building text-purple-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Distribuição por Empresa</h3>
+                    <canvas id="empresaChart" height="300"></canvas>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Médias por Seção</h3>
+                    <canvas id="secaoChart" height="300"></canvas>
+                </div>
+            </div>
+
+            <!-- Data Table -->
+            <div class="bg-white rounded-lg shadow-sm">
+                <div class="flex items-center justify-between p-6 border-b">
+                    <h3 class="text-lg font-semibold text-gray-800">Dados Detalhados</h3>
+                    <div class="flex space-x-2">
+                        <button id="tableViewBtn" class="px-3 py-1 bg-blue-600 text-white rounded text-sm">
+                            <i class="fas fa-table mr-1"></i>
+                            Tabela
+                        </button>
+                        <button id="cardViewBtn" class="px-3 py-1 bg-gray-300 text-gray-700 rounded text-sm">
+                            <i class="fas fa-th-large mr-1"></i>
+                            Cards
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="dataContainer" class="p-6">
+                    <!-- Será preenchido via JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Modal -->
+    <div id="exportModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Exportar Relatório</h3>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Formato</label>
+                    <select id="exportFormat" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <option value="csv">CSV</option>
+                        <option value="pdf">PDF</option>
+                        <option value="excel">Excel</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Incluir</label>
+                    <div class="space-y-2">
+                        <label class="flex items-center">
+                            <input type="checkbox" id="includeCharts" checked class="mr-2">
+                            <span class="text-sm">Gráficos</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" id="includeData" checked class="mr-2">
+                            <span class="text-sm">Dados detalhados</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" id="includeSummary" checked class="mr-2">
+                            <span class="text-sm">Resumo estatístico</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex justify-end space-x-3 mt-6">
+                <button onclick="closeExportModal()" class="px-4 py-2 text-gray-600 hover:text-gray-800">
+                    Cancelar
+                </button>
+                <button onclick="executeExport()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
+                    <i class="fas fa-download mr-2"></i>
+                    Exportar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/admin-common.js"></script>
+    <script>
+        // Função global de logout
+        function logout() {
+            AdminAuth.logout();
+        }
+
+        class RelatoriosPage {
+            constructor() {
+                this.charts = {};
+                this.currentData = [];
+                this.filteredData = [];
+                this.currentView = 'table';
+                
+                this.init();
+            }
+
+            async init() {
+                this.setupSidebar();
+                this.setupEventListeners();
+                await this.loadData();
+                this.initCharts();
+                this.renderData();
+            }
+
+            setupSidebar() {
+                const sidebarToggle = document.getElementById('sidebarToggle');
+                const sidebar = document.getElementById('sidebar');
+                const mainContent = document.getElementById('mainContent');
+
+                sidebarToggle.addEventListener('click', () => {
+                    sidebar.classList.toggle('collapsed');
+                    if (sidebar.classList.contains('collapsed')) {
+                        mainContent.classList.remove('ml-64');
+                        mainContent.classList.add('ml-16');
+                    } else {
+                        mainContent.classList.remove('ml-16');
+                        mainContent.classList.add('ml-64');
+                    }
+                });
+            }
+
+            setupEventListeners() {
+                // Filter events
+                document.getElementById('applyFiltersBtn').addEventListener('click', () => this.applyFilters());
+                document.getElementById('clearFiltersBtn').addEventListener('click', () => this.clearFilters());
+                
+                // Export events
+                document.getElementById('exportBtn').addEventListener('click', () => this.showExportModal());
+                
+                // Refresh
+                document.getElementById('refreshBtn').addEventListener('click', () => this.loadData());
+                
+                // View toggle
+                document.getElementById('tableViewBtn').addEventListener('click', () => this.setView('table'));
+                document.getElementById('cardViewBtn').addEventListener('click', () => this.setView('cards'));
+            }
+
+            async loadData() {
+                try {
+                    // Simular dados para demonstração
+                    this.currentData = [
+                        {
+                            id: 1,
+                            usuario: 'João Silva',
+                            email: 'joao@empresa.com',
+                            empresa: 'Empresa ABC Ltda',
+                            departamento: 'TI',
+                            cargo: 'Analista',
+                            data_resposta: '2025-01-08',
+                            q1: 3, q2: 4, q3: 2, q4: 5, q5: 3,
+                            media: 3.4
+                        },
+                        {
+                            id: 2,
+                            usuario: 'Maria Santos',
+                            email: 'maria@corpxyz.com',
+                            empresa: 'Corp XYZ S.A.',
+                            departamento: 'RH',
+                            cargo: 'Gerente',
+                            data_resposta: '2025-01-07',
+                            q1: 4, q2: 3, q3: 4, q4: 4, q5: 5,
+                            media: 4.0
+                        },
+                        {
+                            id: 3,
+                            usuario: 'Pedro Costa',
+                            email: 'pedro@tech123.com',
+                            empresa: 'Tech 123 Ltda',
+                            departamento: 'Desenvolvimento',
+                            cargo: 'Desenvolvedor',
+                            data_resposta: '2025-01-06',
+                            q1: 2, q2: 3, q3: 3, q4: 2, q5: 4,
+                            media: 2.8
+                        }
+                    ];
+
+                    this.filteredData = [...this.currentData];
+                    this.loadEmpresas();
+                    this.updateSummary();
+                    
+                } catch (error) {
+                    console.error('Erro ao carregar dados:', error);
+                    AdminUtils.showNotification('Erro ao carregar dados', 'error');
+                }
+            }
+
+            loadEmpresas() {
+                const empresas = [...new Set(this.currentData.map(item => item.empresa))];
+                const select = document.getElementById('empresaFilter');
+                
+                select.innerHTML = '<option value="">Todas as empresas</option>';
+                empresas.forEach(empresa => {
+                    const option = document.createElement('option');
+                    option.value = empresa;
+                    option.textContent = empresa;
+                    select.appendChild(option);
+                });
+            }
+
+            applyFilters() {
+                const empresa = document.getElementById('empresaFilter').value;
+                const dataInicial = document.getElementById('dataInicialFilter').value;
+                const dataFinal = document.getElementById('dataFinalFilter').value;
+                const departamento = document.getElementById('departamentoFilter').value.toLowerCase();
+
+                this.filteredData = this.currentData.filter(item => {
+                    if (empresa && item.empresa !== empresa) return false;
+                    if (dataInicial && item.data_resposta < dataInicial) return false;
+                    if (dataFinal && item.data_resposta > dataFinal) return false;
+                    if (departamento && !item.departamento.toLowerCase().includes(departamento)) return false;
+                    return true;
+                });
+
+                this.updateSummary();
+                this.updateCharts();
+                this.renderData();
+                
+                AdminUtils.showNotification('Filtros aplicados com sucesso', 'success');
+            }
+
+            clearFilters() {
+                document.getElementById('empresaFilter').value = '';
+                document.getElementById('dataInicialFilter').value = '';
+                document.getElementById('dataFinalFilter').value = '';
+                document.getElementById('departamentoFilter').value = '';
+                
+                this.filteredData = [...this.currentData];
+                this.updateSummary();
+                this.updateCharts();
+                this.renderData();
+                
+                AdminUtils.showNotification('Filtros limpos', 'info');
+            }
+
+            updateSummary() {
+                const total = this.filteredData.length;
+                const media = total > 0 ? (this.filteredData.reduce((sum, item) => sum + item.media, 0) / total).toFixed(1) : 0;
+                const empresas = new Set(this.filteredData.map(item => item.empresa)).size;
+
+                document.getElementById('totalRespostasFiltradas').textContent = total;
+                document.getElementById('mediaGeralFiltrada').textContent = media;
+                document.getElementById('empresasFiltradas').textContent = empresas;
+            }
+
+            initCharts() {
+                this.createEmpresaChart();
+                this.createSecaoChart();
+            }
+
+            createEmpresaChart() {
+                const ctx = document.getElementById('empresaChart').getContext('2d');
+                
+                this.charts.empresa = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: 'Respostas',
+                            data: [],
+                            backgroundColor: '#667eea',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+
+                this.updateCharts();
+            }
+
+            createSecaoChart() {
+                const ctx = document.getElementById('secaoChart').getContext('2d');
+                
+                this.charts.secao = new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels: ['Q1', 'Q2', 'Q3', 'Q4', 'Q5'],
+                        datasets: [{
+                            label: 'Média',
+                            data: [],
+                            borderColor: '#667eea',
+                            backgroundColor: 'rgba(102, 126, 234, 0.2)',
+                            pointBackgroundColor: '#667eea'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            r: {
+                                beginAtZero: true,
+                                max: 5
+                            }
+                        }
+                    }
+                });
+
+                this.updateCharts();
+            }
+
+            updateCharts() {
+                // Update empresa chart
+                const empresaData = {};
+                this.filteredData.forEach(item => {
+                    empresaData[item.empresa] = (empresaData[item.empresa] || 0) + 1;
+                });
+
+                this.charts.empresa.data.labels = Object.keys(empresaData);
+                this.charts.empresa.data.datasets[0].data = Object.values(empresaData);
+                this.charts.empresa.update();
+
+                // Update seção chart
+                const secaoData = [0, 0, 0, 0, 0];
+                if (this.filteredData.length > 0) {
+                    for (let i = 1; i <= 5; i++) {
+                        secaoData[i-1] = this.filteredData.reduce((sum, item) => sum + item[`q${i}`], 0) / this.filteredData.length;
+                    }
+                }
+
+                this.charts.secao.data.datasets[0].data = secaoData;
+                this.charts.secao.update();
+            }
+
+            setView(view) {
+                this.currentView = view;
+                
+                // Update buttons
+                document.getElementById('tableViewBtn').className = view === 'table' 
+                    ? 'px-3 py-1 bg-blue-600 text-white rounded text-sm'
+                    : 'px-3 py-1 bg-gray-300 text-gray-700 rounded text-sm';
+                    
+                document.getElementById('cardViewBtn').className = view === 'cards'
+                    ? 'px-3 py-1 bg-blue-600 text-white rounded text-sm'
+                    : 'px-3 py-1 bg-gray-300 text-gray-700 rounded text-sm';
+
+                this.renderData();
+            }
+
+            renderData() {
+                const container = document.getElementById('dataContainer');
+                
+                if (this.currentView === 'table') {
+                    this.renderTable(container);
+                } else {
+                    this.renderCards(container);
+                }
+            }
+
+            renderTable(container) {
+                let html = '<div class="overflow-x-auto">';
+                html += '<table class="min-w-full">';
+                html += '<thead class="bg-gray-50">';
+                html += '<tr>';
+                html += '<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Usuário</th>';
+                html += '<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Empresa</th>';
+                html += '<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Departamento</th>';
+                html += '<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Data</th>';
+                html += '<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Média</th>';
+                html += '<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ações</th>';
+                html += '</tr>';
+                html += '</thead>';
+                html += '<tbody class="bg-white divide-y divide-gray-200">';
+
+                this.filteredData.forEach(item => {
+                    html += '<tr class="hover:bg-gray-50">';
+                    html += `<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.usuario}</td>`;
+                    html += `<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.empresa}</td>`;
+                    html += `<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.departamento}</td>`;
+                    html += `<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${AdminUtils.formatDate(item.data_resposta)}</td>`;
+                    html += `<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.media.toFixed(1)}</td>`;
+                    html += `<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <button onclick="viewDetails(${item.id})" class="text-blue-600 hover:text-blue-800 mr-2">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button onclick="exportItem(${item.id})" class="text-green-600 hover:text-green-800">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </td>`;
+                    html += '</tr>';
+                });
+
+                html += '</tbody>';
+                html += '</table>';
+                html += '</div>';
+
+                container.innerHTML = html;
+            }
+
+            renderCards(container) {
+                let html = '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">';
+
+                this.filteredData.forEach(item => {
+                    html += `
+                        <div class="bg-gray-50 rounded-lg p-4 hover:shadow-md transition-shadow">
+                            <div class="flex items-center justify-between mb-3">
+                                <h4 class="font-semibold text-gray-800">${item.usuario}</h4>
+                                <span class="text-sm text-gray-500">${AdminUtils.formatDate(item.data_resposta)}</span>
+                            </div>
+                            <div class="space-y-2 text-sm">
+                                <p><span class="font-medium">Empresa:</span> ${item.empresa}</p>
+                                <p><span class="font-medium">Departamento:</span> ${item.departamento}</p>
+                                <p><span class="font-medium">Cargo:</span> ${item.cargo}</p>
+                                <p><span class="font-medium">Média:</span> ${item.media.toFixed(1)}</p>
+                            </div>
+                            <div class="flex justify-end space-x-2 mt-4">
+                                <button onclick="viewDetails(${item.id})" class="text-blue-600 hover:text-blue-800">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button onclick="exportItem(${item.id})" class="text-green-600 hover:text-green-800">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += '</div>';
+                container.innerHTML = html;
+            }
+
+            showExportModal() {
+                document.getElementById('exportModal').style.display = 'flex';
+            }
+        }
+
+        // Global functions
+        function toggleFilters() {
+            const card = document.querySelector('.filter-card');
+            const icon = document.getElementById('filterToggleIcon');
+            
+            card.classList.toggle('collapsed');
+            card.classList.toggle('expanded');
+            
+            if (card.classList.contains('collapsed')) {
+                icon.className = 'fas fa-chevron-down text-gray-600';
+            } else {
+                icon.className = 'fas fa-chevron-up text-gray-600';
+            }
+        }
+
+        function closeExportModal() {
+            document.getElementById('exportModal').style.display = 'none';
+        }
+
+        function executeExport() {
+            const format = document.getElementById('exportFormat').value;
+            AdminUtils.showNotification(`Exportando relatório em formato ${format.toUpperCase()}...`, 'info');
+            
+            // Simular export
+            setTimeout(() => {
+                AdminUtils.showNotification('Relatório exportado com sucesso!', 'success');
+                closeExportModal();
+            }, 2000);
+        }
+
+        function viewDetails(id) {
+            AdminUtils.showNotification(`Visualizando detalhes do item ${id}`, 'info');
+        }
+
+        function exportItem(id) {
+            AdminUtils.showNotification(`Exportando item ${id}`, 'info');
+        }
+
+        function logout() {
+            AdminAuth.logout();
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!AdminAuth.isAuthenticated()) {
+                window.location.href = '../admin/login.html';              return;
+            }
+
+            const user = AdminAuth.getUser();
+            if (user && user.nome) {
+                document.getElementById('adminName').textContent = user.nome;
+            }
+
+            new RelatoriosPage();
+        });
+    </script>
+</body>
+</html>
+

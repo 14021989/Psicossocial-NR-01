@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Administrativo - COPSOQ System</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .sidebar {
+            transition: transform 0.3s ease;
+        }
+        
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+        
+        @media (min-width: 768px) {
+            .sidebar.collapsed {
+                transform: translateX(0);
+                width: 4rem;
+            }
+            
+            .sidebar.collapsed .sidebar-text {
+                display: none;
+            }
+            
+            .sidebar.collapsed .sidebar-icon {
+                margin: 0 auto;
+            }
+        }
+        
+        .card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, var(--from-color), var(--to-color));
+        }
+        
+        .animate-pulse-slow {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar fixed left-0 top-0 h-full w-64 bg-white shadow-lg z-30">
+        <div class="p-6 border-b">
+            <div class="flex items-center">
+                <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-chart-bar text-white"></i>
+                </div>
+                <div class="ml-3 sidebar-text">
+                    <h1 class="text-lg font-bold text-gray-800">COPSOQ Admin</h1>
+                    <p class="text-sm text-gray-600">Sistema de Relatórios</p>
+                </div>
+            </div>
+        </div>
+        
+        <nav class="mt-6">
+            <a href="#" class="flex items-center px-6 py-3 text-blue-600 bg-blue-50 border-r-2 border-blue-600">
+                <i class="fas fa-tachometer-alt sidebar-icon"></i>
+                <span class="ml-3 sidebar-text">Dashboard</span>
+            </a>
+            <a href="relatorios.html" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-colors">
+                <i class="fas fa-chart-line sidebar-icon"></i>
+                <span class="ml-3 sidebar-text">Relatórios</span>
+            </a>
+            <a href="empresas.html" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-colors">
+                <i class="fas fa-building sidebar-icon"></i>
+                <span class="ml-3 sidebar-text">Empresas</span>
+            </a>
+            <a href="#" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-colors">
+                <i class="fas fa-users sidebar-icon"></i>
+                <span class="ml-3 sidebar-text">Usuários</span>
+            </a>
+            <a href="#" class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-colors">
+                <i class="fas fa-cog sidebar-icon"></i>
+                <span class="ml-3 sidebar-text">Configurações</span>
+            </a>
+        </nav>
+        
+        <div class="absolute bottom-0 w-full p-6 border-t">
+            <div class="flex items-center">
+                <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+                    <i class="fas fa-user text-gray-600 text-sm"></i>
+                </div>
+                <div class="ml-3 sidebar-text">
+                    <p class="text-sm font-medium text-gray-800" id="adminName">Administrador</p>
+                    <button onclick="logout()" class="text-xs text-red-600 hover:text-red-800">Sair</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="mainContent" class="ml-64 transition-all duration-300">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b">
+            <div class="flex items-center justify-between px-6 py-4">
+                <div class="flex items-center">
+                    <button id="sidebarToggle" class="text-gray-600 hover:text-gray-800 mr-4">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h2 class="text-xl font-semibold text-gray-800">Dashboard</h2>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <input type="text" placeholder="Buscar..." 
+                               class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                    
+                    <button class="relative text-gray-600 hover:text-gray-800">
+                        <i class="fas fa-bell text-xl"></i>
+                        <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <main class="p-6">
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <!-- Total Respostas -->
+                <div class="stat-card card p-6 rounded-lg text-white" style="--from-color: #667eea; --to-color: #764ba2;">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-blue-100 text-sm">Total de Respostas</p>
+                            <p class="text-3xl font-bold" id="totalRespostas">0</p>
+                        </div>
+                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-clipboard-list text-2xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center">
+                        <i class="fas fa-arrow-up text-green-300 mr-1"></i>
+                        <span class="text-green-300 text-sm">+12% este mês</span>
+                    </div>
+                </div>
+
+                <!-- Empresas Ativas -->
+                <div class="stat-card card p-6 rounded-lg text-white" style="--from-color: #f093fb; --to-color: #f5576c;">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-pink-100 text-sm">Empresas Ativas</p>
+                            <p class="text-3xl font-bold" id="empresasAtivas">0</p>
+                        </div>
+                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-building text-2xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center">
+                        <i class="fas fa-arrow-up text-green-300 mr-1"></i>
+                        <span class="text-green-300 text-sm">+3 novas</span>
+                    </div>
+                </div>
+
+                <!-- Média Geral -->
+                <div class="stat-card card p-6 rounded-lg text-white" style="--from-color: #4facfe; --to-color: #00f2fe;">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-blue-100 text-sm">Média Geral</p>
+                            <p class="text-3xl font-bold" id="mediaGeral">0.0</p>
+                        </div>
+                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-chart-line text-2xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center">
+                        <i class="fas fa-minus text-yellow-300 mr-1"></i>
+                        <span class="text-yellow-300 text-sm">Estável</span>
+                    </div>
+                </div>
+
+                <!-- Respostas Hoje -->
+                <div class="stat-card card p-6 rounded-lg text-white" style="--from-color: #43e97b; --to-color: #38f9d7;">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-green-100 text-sm">Respostas Hoje</p>
+                            <p class="text-3xl font-bold" id="respostasHoje">0</p>
+                        </div>
+                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-calendar-day text-2xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center">
+                        <i class="fas fa-arrow-up text-green-300 mr-1"></i>
+                        <span class="text-green-300 text-sm">+8 desde ontem</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <!-- Respostas por Empresa -->
+                <div class="card bg-white p-6 rounded-lg shadow">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-800">Respostas por Empresa</h3>
+                        <div class="flex space-x-2">
+                            <button class="text-gray-400 hover:text-gray-600">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="text-gray-400 hover:text-gray-600">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <canvas id="empresasChart" height="300"></canvas>
+                </div>
+
+                <!-- Tendência Temporal -->
+                <div class="card bg-white p-6 rounded-lg shadow">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-800">Tendência Temporal</h3>
+                        <select class="text-sm border border-gray-300 rounded px-3 py-1">
+                            <option>Últimos 7 dias</option>
+                            <option>Últimos 30 dias</option>
+                            <option>Últimos 3 meses</option>
+                        </select>
+                    </div>
+                    <canvas id="tendenciaChart" height="300"></canvas>
+                </div>
+            </div>
+
+            <!-- Recent Activity & Top Companies -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Atividade Recente -->
+                <div class="card bg-white p-6 rounded-lg shadow">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Atividade Recente</h3>
+                    <div class="space-y-4" id="atividadeRecente">
+                        <!-- Será preenchido via JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Top Empresas -->
+                <div class="card bg-white p-6 rounded-lg shadow">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Empresas com Mais Respostas</h3>
+                    <div class="space-y-4" id="topEmpresas">
+                        <!-- Será preenchido via JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/admin-common.js"></script>
+    <script>
+        // Função global de logout
+        function logout() {
+            AdminAuth.logout();
+        }
+
+        class Dashboard {
+            constructor() {
+                this.charts = {};
+                this.init();
+            }
+
+            async init() {
+                this.setupSidebar();
+                await this.loadDashboardData();
+                this.initCharts();
+                this.startRealTimeUpdates();
+            }
+
+            setupSidebar() {
+                const sidebarToggle = document.getElementById('sidebarToggle');
+                const sidebar = document.getElementById('sidebar');
+                const mainContent = document.getElementById('mainContent');
+
+                sidebarToggle.addEventListener('click', () => {
+                    sidebar.classList.toggle('collapsed');
+                    if (sidebar.classList.contains('collapsed')) {
+                        mainContent.classList.remove('ml-64');
+                        mainContent.classList.add('ml-16');
+                    } else {
+                        mainContent.classList.remove('ml-16');
+                        mainContent.classList.add('ml-64');
+                    }
+                });
+            }
+
+            async loadDashboardData() {
+                try {
+                    // Usar API de debug sem autenticação
+                    const response = await fetch('/api/admin/dashboard-debug');
+                    if (!response.ok) {
+                        throw new Error('Erro ao carregar dados do dashboard');
+                    }
+                    
+                    const result = await response.json();
+                    console.log('Dados carregados:', result);
+                    
+                    // A API de debug retorna dados diretamente, não em result.data
+                    const apiData = result;
+                    
+                    // Adaptar dados da API para o formato esperado
+                    const data = {
+                        totalRespostas: apiData.total_respostas,
+                        empresasAtivas: apiData.empresas_ativas,
+                        mediaGeral: apiData.media_geral,
+                        respostasHoje: apiData.respostas_hoje,
+                        empresas: apiData.top_empresas || [
+                            { nome: 'Nenhuma empresa', respostas: 0 }
+                        ],
+                        tendencia: apiData.tendencia || [
+                            { data: '2025-01-01', respostas: 0 }
+                        ],
+                        atividadeRecente: apiData.atividade_recente || []
+                    };
+
+                    this.updateStats(data);
+                    this.updateRecentActivity(data.atividadeRecente);
+                    this.updateTopCompanies(data.empresas);
+                    
+                    return data;
+                } catch (error) {
+                    console.error('Erro ao carregar dados:', error);
+                }
+            }
+
+            updateStats(data) {
+                this.animateCounter('totalRespostas', data.totalRespostas);
+                this.animateCounter('empresasAtivas', data.empresasAtivas);
+                this.animateCounter('mediaGeral', data.mediaGeral, 1);
+                this.animateCounter('respostasHoje', data.respostasHoje);
+            }
+
+            animateCounter(elementId, targetValue, decimals = 0) {
+                const element = document.getElementById(elementId);
+                const startValue = 0;
+                const duration = 2000;
+                const startTime = Date.now();
+
+                const animate = () => {
+                    const elapsed = Date.now() - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    
+                    const currentValue = startValue + (targetValue - startValue) * this.easeOutQuart(progress);
+                    element.textContent = decimals > 0 ? currentValue.toFixed(decimals) : Math.floor(currentValue);
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(animate);
+                    }
+                };
+
+                animate();
+            }
+
+            easeOutQuart(t) {
+                return 1 - Math.pow(1 - t, 4);
+            }
+
+            async initCharts() {
+                const data = await this.loadDashboardData();
+                this.createEmpresasChart(data.empresas);
+                this.createTendenciaChart(data.tendencia);
+            }
+
+            createEmpresasChart(empresas) {
+                const ctx = document.getElementById('empresasChart').getContext('2d');
+                
+                this.charts.empresas = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: empresas.map(e => e.nome),
+                        datasets: [{
+                            data: empresas.map(e => e.respostas),
+                            backgroundColor: [
+                                '#667eea',
+                                '#764ba2',
+                                '#f093fb',
+                                '#f5576c',
+                                '#4facfe'
+                            ],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    padding: 20,
+                                    usePointStyle: true
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            createTendenciaChart(tendencia) {
+                const ctx = document.getElementById('tendenciaChart').getContext('2d');
+                
+                this.charts.tendencia = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: tendencia.map(t => new Date(t.data).toLocaleDateString('pt-BR')),
+                        datasets: [{
+                            label: 'Respostas',
+                            data: tendencia.map(t => t.respostas),
+                            borderColor: '#667eea',
+                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#667eea',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.1)'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            updateRecentActivity(atividades) {
+                const container = document.getElementById('atividadeRecente');
+                container.innerHTML = '';
+
+                atividades.forEach(atividade => {
+                    const item = document.createElement('div');
+                    item.className = 'flex items-center p-3 bg-gray-50 rounded-lg';
+                    
+                    const icon = atividade.tipo === 'resposta' ? 'fa-clipboard-list' : 'fa-building';
+                    const color = atividade.tipo === 'resposta' ? 'text-blue-600' : 'text-green-600';
+                    
+                    item.innerHTML = `
+                        <div class="w-8 h-8 ${color} bg-opacity-20 rounded-full flex items-center justify-center mr-3">
+                            <i class="fas ${icon} text-sm"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-gray-800">${atividade.empresa}</p>
+                            <p class="text-xs text-gray-600">${atividade.tempo}</p>
+                        </div>
+                    `;
+                    
+                    container.appendChild(item);
+                });
+            }
+
+            updateTopCompanies(empresas) {
+                const container = document.getElementById('topEmpresas');
+                container.innerHTML = '';
+
+                empresas.forEach((empresa, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-lg';
+                    
+                    const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}º`;
+                    
+                    item.innerHTML = `
+                        <div class="flex items-center">
+                            <span class="text-lg mr-3">${medal}</span>
+                            <div>
+                                <p class="text-sm font-medium text-gray-800">${empresa.nome}</p>
+                                <p class="text-xs text-gray-600">${empresa.respostas} respostas</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="w-16 h-2 bg-gray-200 rounded-full">
+                                <div class="h-2 bg-blue-600 rounded-full" style="width: ${(empresa.respostas / 245) * 100}%"></div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    container.appendChild(item);
+                });
+            }
+
+            startRealTimeUpdates() {
+                // Simular atualizações em tempo real
+                setInterval(() => {
+                    this.loadDashboardData();
+                }, 30000); // Atualizar a cada 30 segundos
+            }
+        }
+
+        // Função global para logout
+        function logout() {
+            if (confirm('Tem certeza que deseja sair?')) {
+                localStorage.removeItem('admin_token');
+                localStorage.removeItem('admin_user');
+                sessionStorage.removeItem('admin_token');
+                sessionStorage.removeItem('admin_user');
+                window.location.href = './login.html';
+            }
+        }
+
+        // Inicializar dashboard
+        document.addEventListener('DOMContentLoaded', () => {
+            // Verificar autenticação
+            const token = localStorage.getItem('admin_token') || sessionStorage.getItem('admin_token');
+            if (!token) {
+                window.location.href = './login.html';
+                return;
+            }
+
+            // Carregar nome do usuário
+            const user = JSON.parse(localStorage.getItem('admin_user') || sessionStorage.getItem('admin_user') || '{}');
+            if (user.nome) {
+                document.getElementById('adminName').textContent = user.nome;
+            }
+
+            new Dashboard();
+        });
+    </script>
+</body>
+</html>
+
